@@ -1,0 +1,72 @@
+version: '3.8'
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notes_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - mongo
+      - redis
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+      MYSQL_DB: notesdb
+      MONGO_URL: mongodb://mongo:27017
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    networks:
+      - notes_network
+    develop:      # New 'develop' section for watch mode
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: rebuild
+          path: ./requirements.txt
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: notesdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - notes_network
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - notes_network
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - notes_network
+
+volumes:
+  mysql_data:
+  mongo_data:
+
+networks:
+  notes_network:
+    driver: bridge

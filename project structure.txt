@@ -1,0 +1,12 @@
+NotesManagerAPI/
+├── app/
+│   ├── main.py
+│   ├── models.py
+│   ├── notes.py
+│   ├── users.py
+│   ├── auth.py
+│   ├── database.py
+│   ├── audit.py
+├── Dockerfile
+├── requirements.txt
+├── docker-compose.yaml
