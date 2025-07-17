@@ -5,3 +5,4 @@ pyjwt
 pymongo
 mysql-connector-python
 redis
+jose-jwt
